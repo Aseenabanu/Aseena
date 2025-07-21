@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .error-input {
+            border-color: #f44336 !important;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #45a049;
+        }
+
+        .login-btn:active {
+            transform: translateY(1px);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forgot-password a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h2>Login</h2>
+            <p>Please enter your credentials</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username or Email:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        
+        <div class="forgot-password">
+            <a href="#" onclick="alert('Password reset feature coming soon!')">Forgot Password?</a>
+        </div>
+    </div>
+
+    <script>
+        // Get form element
+        const loginForm = document.getElementById('loginForm');
+        
+        // Add event listener for form submission
+        loginForm.addEventListener('submit', function(e) {
+            // Prevent default form submission
+            e.preventDefault();
+            
+            // Get input values
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Clear any previous error styling
+            clearErrorStyling();
+            
+            // Validate the form
+            if (validateForm(username, password)) {
+                // If validation passes, show success message
+                alert('Login successful! Welcome, ' + username + '!');
+                
+                // You can redirect to another page here
+                // window.location.href = 'dashboard.html';
+                
+                // Or reset the form
+                loginForm.reset();
+            }
+        });
+        
+        // Function to validate the form
+        function validateForm(username, password) {
+            let isValid = true;
+            
+            // Check if username is empty
+            if (username.trim() === '') {
+                alert('Please enter your username or email!');
+                document.getElementById('username').classList.add('error-input');
+                document.getElementById('username').focus();
+                isValid = false;
+                return isValid;
+            }
+            
+            // Check if username is valid (basic email or username check)
+            if (username.includes('@')) {
+                // If it contains @, validate as email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(username)) {
+                    alert('Please enter a valid email address!');
+                    document.getElementById('username').classList.add('error-input');
+                    document.getElementById('username').focus();
+                    isValid = false;
+                    return isValid;
+                }
+            } else {
+                // If no @, validate as username (at least 3 characters)
+                if (username.length < 3) {
+                    alert('Username must be at least 3 characters long!');
+                    document.getElementById('username').classList.add('error-input');
+                    document.getElementById('username').focus();
+                    isValid = false;
+                    return isValid;
+                }
+            }
+            
+            // Check if password is empty
+            if (password.trim() === '') {
+                alert('Please enter your password!');
+                document.getElementById('password').classList.add('error-input');
+                document.getElementById('password').focus();
+                isValid = false;
+                return isValid;
+            }
+            
+            // Check password length
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long!');
+                document.getElementById('password').classList.add('error-input');
+                document.getElementById('password').focus();
+                isValid = false;
+                return isValid;
+            }
+            
+            // Demo: Check for specific username/password combination
+            // In a real application, you would send this to a server
+            if (username === 'admin' && password === 'password123') {
+                return true;
+            } else if (username === 'user@example.com' && password === 'userpass') {
+                return true;
+            } else {
+                alert('Invalid username or password! Try:\nUsername: admin, Password: password123\nOR\nEmail: user@example.com, Password: userpass');
+                isValid = false;
+                return isValid;
+            }
+        }
+        
+        // Function to clear error styling
+        function clearErrorStyling() {
+            document.getElementById('username').classList.remove('error-input');
+            document.getElementById('password').classList.remove('error-input');
+        }
+        
+        // Add real-time validation (optional)
+        document.getElementById('username').addEventListener('input', function() {
+            this.classList.remove('error-input');
+        });
+        
+        document.getElementById('password').addEventListener('input', function() {
+            this.classList.remove('error-input');
+        });
+    </script>
+</body>
+</html>
